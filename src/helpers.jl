@@ -1,3 +1,4 @@
+using Plots: savefig
 import Downloads
 
 # File paths
@@ -39,3 +40,6 @@ function string_wrap(s::String, width::Integer)
     end
     return output
 end
+
+# Plots
+export_plot(p, plot_name) = savefig(p, joinpath(output_folder_path, plot_name * ".svg"))
