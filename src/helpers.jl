@@ -25,8 +25,8 @@ yes_or_no(x) = x ? "Yes" : "No"
 
 function string_wrap(s::String, width::Integer)
     output = ""
-    for i in 1:width:length(s) 
-        output *= s[i:(i + width-1)] * "\n"
+    for i in 1:width:length(s)
+        output *= s[i:(i + width - 1)] * "\n"
     end
     return output
 end
