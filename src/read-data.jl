@@ -43,4 +43,5 @@ function get_meat_washing()
         filter(:age => (a -> ismissing(a) || 5 <= a <= 120), _) # Drop joke answers
         filter(:household_size => (n -> ismissing(n) || 1 <= n <= 50), _) # Drop joke answers and nonsensical answers
     end
+    return meat_washing
 end
