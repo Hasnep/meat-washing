@@ -1,6 +1,6 @@
 using Plots
 using StatsPlots
-using Chain: @chain
+using Chain: @chain, @aside
 using DataFrames
 
 include("helpers.jl")
