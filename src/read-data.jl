@@ -26,11 +26,14 @@ separate_do_regularly(s) = separate(s; levels = values(levels_do_regularly), lev
 
 # Read data
 function get_meat_washing()
-    questions = @chain "data/questions.csv" begin
+    questions = @chain "questions.csv" begin
+        joinpath(data_folder_path, _)
         CSV.File()
         DataFrame()
     end
-    meat_washing = @chain "data/meat-washing.csv" begin
+
+    meat_washing = @chain "meat-washing.csv" begin
+        joinpath(data_folder_path, _)
         CSV.File(header = 2)
         DataFrame()
         rename(questions.raw_name .=> questions.column_name) # Fix column names

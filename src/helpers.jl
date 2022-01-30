@@ -1,3 +1,7 @@
+# File paths
+data_folder_path = joinpath(pwd(), "data")
+output_folder_path = joinpath(pwd(), "output")
+
 """
 Return an anonymous function that formats a number as a percentage with a specified level of accuracy.
 """
