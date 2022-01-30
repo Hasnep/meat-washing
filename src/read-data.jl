@@ -22,25 +22,13 @@ levels_do_regularly = Dict(
 )
 separate_do_regularly(s) = separate(s; levels = values(levels_do_regularly), level_names = keys(levels_do_regularly))
 
+# Raw data functions
 
-# Read data
-function get_meat_washing()
-    questions = @chain "questions.csv" begin
-        joinpath(data_folder_path, _)
-        CSV.File()
-        DataFrame()
-    end
-
-    meat_washing = @chain "meat-washing.csv" begin
-        joinpath(data_folder_path, _)
-        CSV.File(header = 2)
-        DataFrame()
-        rename(questions.raw_name .=> questions.column_name) # Fix column names
-        transform(:country_residence => ByRow(clean_countries) => :country_residence)
-        transform(:country_origin => ByRow(clean_countries) => :country_origin)
-        transform(:do_regularly => ByRow(separate_do_regularly) => AsTable)
-        filter(:age => (a -> ismissing(a) || 5 <= a <= 120), _) # Drop joke answers
-        filter(:household_size => (n -> ismissing(n) || 1 <= n <= 50), _) # Drop joke answers and nonsensical answers
-    end
-    return meat_washing
+read_questions_raw(file_path) = @chain file_path begin
+    CSV.File()
+    Dict(_.raw_name .=> _.column_name)
+end
+read_meat_washing_raw(file_path) = @chain file_path begin
+    CSV.File(header = 2)
+    DataFrame()
 end

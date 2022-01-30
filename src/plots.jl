@@ -6,7 +6,22 @@ using DataFrames
 include("helpers.jl")
 include("read-data.jl")
 
-meat_washing = get_meat_washing()
+questions_raw = read_questions_raw(joinpath(data_folder_path, "questions.csv"))
+
+meat_washing_data_url = "https://gist.githubusercontent.com/Hasnep/8c60d7c27bbc9323763d6059c24fff76/raw/25c70005d3a86a82c6187c6dca4cecad2622a0c6/RaguseaMeatWashingSurveyResponsesRaw.csv"
+meat_washing_file_path = joinpath(data_folder_path, "meat-washing.csv")
+download_if_needed(meat_washing_data_url, meat_washing_file_path)
+meat_washing_raw = read_meat_washing_raw(meat_washing_file_path)
+
+# Clean the data
+meat_washing = @chain meat_washing_raw begin
+    rename(questions.raw_name .=> questions.column_name) # Fix column names
+    transform(:country_residence => ByRow(clean_countries) => :country_residence)
+    transform(:country_origin => ByRow(clean_countries) => :country_origin)
+    transform(:do_regularly => ByRow(separate_do_regularly) => AsTable)
+    filter(:age => (a -> ismissing(a) || 5 <= a <= 120), _) # Drop joke answers
+    filter(:household_size => (n -> ismissing(n) || 1 <= n <= 50), _) # Drop joke answers and nonsensical answers
+end
 
 # Plots
 @chain meat_washing begin

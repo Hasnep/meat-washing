@@ -1,6 +1,11 @@
+import Downloads
+
 # File paths
 data_folder_path = joinpath(pwd(), "data")
 output_folder_path = joinpath(pwd(), "output")
+
+# Data download
+download_if_needed(url, file_path) = isfile(file_path) ? nothing : Downloads.download(url, file_path)
 
 """
 Return an anonymous function that formats a number as a percentage with a specified level of accuracy.
