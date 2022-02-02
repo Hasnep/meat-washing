@@ -42,4 +42,8 @@ function string_wrap(s::String, width::Integer)
 end
 
 # Plots
-export_plot(p, plot_name) = savefig(p, joinpath(output_folder_path, plot_name * ".svg"))
+function export_plot(p, plot_name)
+    exported_file_path = joinpath(output_folder_path, plot_name * ".svg")
+    savefig(p, exported_file_path)
+    return p
+end

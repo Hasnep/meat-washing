@@ -1,6 +1,6 @@
 using Plots
 using StatsPlots
-using Chain: @chain, @aside
+using Chain: @chain
 using DataFrames
 
 include("helpers.jl")
@@ -30,7 +30,7 @@ end
     sort(order(:n, rev = true))
     first(10)
     @df _ bar(:country_residence, :n; title = "Country of residence of respondents", xrotation = 45)
-    @aside export_plot(_, "country_of_residence")
+    export_plot("country_of_residence")
 end
 
 @chain meat_washing begin
@@ -38,7 +38,7 @@ end
     sort(order(:n, rev = true))
     first(10)
     @df _ bar(:country_origin, :n; title = "Country of origin of respondents", xrotation = 45)
-    @aside export_plot(_, "country_of_origin")
+    export_plot("country_of_origin")
 end
 
 @chain meat_washing begin
@@ -56,7 +56,7 @@ end
         legend = :topleft,
         ylims = (0, 1),
     )
-    @aside export_plot(_, "regularly_wash_hands_by_gender")
+    export_plot("regularly_wash_hands_by_gender")
 end
 
 top_countries = @chain meat_washing begin
@@ -81,7 +81,7 @@ end
         legend = false,
         xrotation = 45,
     )
-    @aside export_plot(_, "regularly_wash_hands_by_country")
+    export_plot("regularly_wash_hands_by_country")
 end
 
 @chain meat_washing begin
@@ -137,5 +137,5 @@ end
         legend = false,
         xrotation = 45,
     )
-    @aside export_plot(_, "prep_often_histogram")
+    export_plot("prep_often_histogram")
 end
