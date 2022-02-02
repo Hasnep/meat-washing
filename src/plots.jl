@@ -19,8 +19,9 @@ meat_washing = @chain meat_washing_raw begin
     transform(:country_residence => ByRow(clean_countries) => :country_residence)
     transform(:country_origin => ByRow(clean_countries) => :country_origin)
     transform(:do_regularly => ByRow(separate_do_regularly) => AsTable)
-    filter(:age => (a -> ismissing(a) || 5 <= a <= 120), _) # Drop joke answers
-    filter(:household_size => (n -> ismissing(n) || 1 <= n <= 50), _) # Drop joke answers and nonsensical answers
+    # Drop joke answers
+    subset(:age => ByRow(a -> ismissing(a) || 5 <= a <= 120))
+    subset(:household_size => ByRow(n -> ismissing(n) || 1 <= n <= 50))
 end
 
 # Plots
@@ -41,7 +42,7 @@ end
 end
 
 @chain meat_washing begin
-    filter(:gender => (g -> !ismissing(g) && g ∈ ("Male", "Female", "Non-binary")), _)
+    subset(:gender => ByRow(g -> ismissing(g) || g in ["Male", "Female", "Non-binary"]))
     countmap(by = [:do_regularly_wash_hands, :gender])
     groupby(:gender)
     transform(:n => (x -> x ./ sum(x)) => :proportion)
@@ -60,17 +61,17 @@ end
 
 top_countries = @chain meat_washing begin
     countmap(by = :country_residence)
-    filter(:n => n -> n > 100, _)
+    subset(:n => ByRow(>(100)))
     _.country_residence
 end
 
 @chain meat_washing begin
     dropmissing(:country_residence)
-    filter(:country_residence => x -> x ∈ top_countries, _)
+    subset(:country_residence => ByRow(∈(top_countries)))
     countmap(by = [:do_regularly_wash_hands, :country_residence])
     groupby(:country_residence)
     transform(:n => (x -> x ./ sum(x)) => :proportion)
-    filter(r -> r.do_regularly_wash_hands, _)
+    subset(:do_regularly_wash_hands)
     sort(order(:proportion, rev = true))
     @df _ bar(
         :country_residence,
@@ -86,7 +87,7 @@ end
 @chain meat_washing begin
     dropmissing(:age)
     dropmissing(:gender)
-    filter(:gender => (g -> g ∈ ("Male", "Female", "Non-binary")), _)
+    subset(:gender => ByRow(∈(["Male", "Female", "Non-binary"])))
     @df _ histogram(
         :age;
         group = :gender,
