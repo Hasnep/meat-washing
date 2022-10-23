@@ -2,8 +2,6 @@ import CSV
 using Chain: @chain
 using DataFrames
 
-include("helpers.jl")
-
 function clean_countries(country_name)
     @chain country_name begin
         replace("United Kingdom of Great Britain and Northern Ireland" => "UK")

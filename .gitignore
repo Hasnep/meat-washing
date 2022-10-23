@@ -3,4 +3,5 @@ data
 !data/questions.csv
 
 # Output files
-output
+build
+*.tar

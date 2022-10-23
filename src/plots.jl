@@ -102,16 +102,17 @@ end
 end
 
 using Statistics: mean, std
-using Distributions: LogNormal, plot!
+using Distributions: LogNormal# , plot
 @chain meat_washing begin
     dropmissing(:age)
     dropmissing(:gender)
-    filter(:gender => (g -> g ∈ ("Male", "Female", "Non-binary")), _)
-    transform(:age => ByRow(log) => :age)
+    subset(:gender => ByRow(∈(["Male", "Female", "Non-binary"])))
+    transform(:age => ByRow(log) => :log_age)
     groupby(:gender)
-    combine(:age => mean, :age => std)
-    transform([:age_mean, :age_std] => ByRow(LogNormal) => :distribution)
-    @df _ plot!(:distribution, group = :gender)
+    combine(:log_age => mean => :mean_log_age, :log_age => std => :std_log_age)
+    transform([:mean_log_age, :std_log_age] => ByRow(LogNormal) => :distribution)
+    plot(_.distribution)
+    #  @df _ plot(:distribution, group = :gender)
 end
 
 @chain meat_washing begin
@@ -136,6 +137,7 @@ end
         title = "How often do you prepare a meal in your household?",
         legend = false,
         xrotation = 45,
+        ylims = (0, 1),
     )
     export_plot("prep_often_histogram")
 end

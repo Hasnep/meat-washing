@@ -1,9 +1,8 @@
-using Plots: savefig
 import Downloads
 
 # File paths
-data_folder_path = joinpath(pwd(), "data")
-output_folder_path = joinpath(pwd(), "output")
+data_folder_path = joinpath(pwd(), "..","data")
+output_folder_path = joinpath(pwd(),"..", "build")
 
 # Data download
 download_if_needed(url, file_path) = isfile(file_path) ? nothing : Downloads.download(url, file_path)
@@ -36,14 +35,14 @@ yes_or_no(x) = x ? "Yes" : "No"
 function string_wrap(s::String, width::Integer)
     output = ""
     for i in 1:width:length(s)
-        output *= s[i:(i + width - 1)] * "\n"
+        output *= s[i:(i+width-1)] * "\n"
     end
     return output
 end
 
-# Plots
-function export_plot(p, plot_name)
-    exported_file_path = joinpath(output_folder_path, plot_name * ".svg")
-    savefig(p, exported_file_path)
-    return p
-end
+# # Plots
+# function export_plot(p, plot_name)
+#     exported_file_path = joinpath(output_folder_path, plot_name * ".svg")
+#     savefig(p, exported_file_path)
+#     return p
+# end
