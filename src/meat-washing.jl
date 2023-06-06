@@ -3,8 +3,8 @@ using CairoMakie
 using Chain: @chain
 using DataFrames
 
-include(joinpath(pwd(),"..", "src", "helpers.jl"))
-include(joinpath(pwd(),"..", "src", "read-data.jl"))
+include(joinpath(pwd(), "..", "src", "helpers.jl"))
+include(joinpath(pwd(), "..", "src", "read-data.jl"))
 
 questions = read_questions_raw(joinpath(data_folder_path, "questions.csv"))
 
